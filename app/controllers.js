@@ -17,6 +17,8 @@ function filePipe(req, res, next) {
   let config = req.app.get('config')
   if (!req.hostname === config.get('baseDomain')) { next() }
   let url = makeUrlForFilePipe(req.params[0], req.query)
+  
+  if(!validator.isURL(url.replace(/ /g, '%20'))) { return notFound(req, res) }
 
   let source = request(url)
   source.on('response', baseResponseModifier);
